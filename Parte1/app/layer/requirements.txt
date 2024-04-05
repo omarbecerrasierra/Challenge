@@ -1,0 +1,5 @@
+exceptiongroup
+fastapi==0.99.0
+uvicorn
+mangum==0.11
+mysql-connector-python
