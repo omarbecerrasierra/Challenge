@@ -1,0 +1,29 @@
+# Usar una versión oficial de Python como imagen base
+FROM python:3.9-slim
+
+# Instalar Node.js
+RUN apt-get update && \
+    apt-get install -y curl gnupg && \
+    curl -sL https://deb.nodesource.com/setup_20_x| bash - && \
+    apt-get install -y nodejs
+
+# Instalar AWS CLI
+RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" && \
+    unzip awscliv2.zip && \
+    ./aws/install
+
+# Instalar AWS CDK
+RUN npm install -g aws-cdk
+
+# Instalar Python dependencies para CDK
+# Asume que tienes un archivo requirements.txt en tu proyecto
+COPY requirements.txt .
+RUN pip install -r requirements.txt
+
+# Copiar el proyecto CDK al contenedor
+WORKDIR /app
+COPY . .
+
+# Define el comando por defecto
+# Puede ser sobreescrito al ejecutar el contenedor
+CMD ["cdk", "deploy"]
